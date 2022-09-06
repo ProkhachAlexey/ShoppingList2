@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist2.R
 import com.example.shoppinglist2.domain.ShopItem
@@ -18,6 +17,9 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
             field = value
             notifyDataSetChanged()
         }
+
+    var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
+    var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         Log.d("ShopListAdapter", "onCreateViewHolder ${++count}")
@@ -35,7 +37,11 @@ class ShopListAdapter: RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>(
         holder.tvName.text = shopItem.name
         holder.tvCount.text =shopItem.count.toString()
         holder.view.setOnLongClickListener {
+            onShopItemLongClickListener?.invoke(shopItem)
             true
+        }
+        holder.view.setOnClickListener {
+            onShopItemClickListener?.invoke(shopItem)
         }
     }
 
