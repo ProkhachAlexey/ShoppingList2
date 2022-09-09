@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist2.R
+import com.example.shoppinglist2.presentation.ShopItemActivity.Companion.newIntentAddItem
+import com.example.shoppinglist2.presentation.ShopItemActivity.Companion.newIntentEditItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,12 +25,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             adapterShopList.submitList(it)
         }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = newIntentAddItem(this)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {
         val rvShopList = findViewById<RecyclerView>(R.id.rv_shop_list)
         adapterShopList = ShopListAdapter()
-        with (rvShopList) {
+        with(rvShopList) {
             adapter = adapterShopList
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.ITEM_SHOP_ENABLED,
@@ -68,6 +76,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupClickListener() {
         adapterShopList.onShopItemClickListener = {
             Log.d("MainActivity", "Item`s name is ${it.toString()}")
+            val intent = newIntentEditItem(this, it.id)
+            startActivity(intent)
         }
     }
 
